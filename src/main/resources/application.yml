@@ -24,7 +24,7 @@ spring:
   jpa:
     #显示jpa操作数据库语句
     show-sql: true
-    #新建数据库使用InnoDB引擎
+    #新建数据表使用InnoDB引擎
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       #如果启动时表格式不一致则更新表，原有数据保留
