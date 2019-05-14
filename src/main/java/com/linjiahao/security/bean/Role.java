@@ -13,7 +13,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "c_rolename")
-    private int rolename;
+    private String rolename;
     @Column(name = "c_rolename_zh")
-    private int rolenameZh;
+    private String rolenameZh;
 }

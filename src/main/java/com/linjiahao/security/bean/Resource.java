@@ -14,9 +14,9 @@ public class Resource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "c_url")
-    private int url;
+    private String url;
     @Column(name = "c_resource_name")
-    private int resourceName;
+    private String resourceName;
     @ManyToMany
     @JoinColumn
     private List<Role> roles;

@@ -14,11 +14,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "c_username")
-    private int username;
+    private String username;
     @Column(name = "c_password")
-    private int password;
+    private String password;
     @Column(name = "c_nickname")
-    private int nickname;
+    private String nickname;
     @ManyToMany
     @JoinColumn
     private List<Role> roles;
