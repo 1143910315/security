@@ -10,7 +10,7 @@ public class ResourceService {
     @Autowired
     private ResourceRepository resourceRepository;
 
-    public Resource getResource(String url) {
+    public Resource getResourceByUrl(String url) {
         return resourceRepository.findFirstByUrl(url);
     }
 }

@@ -23,7 +23,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User getByUsername(String username) {
+    public User getUserByUsername(String username) {
         return userRepository.findFirstByUsername(username);
     }
 
@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
     //根据用户名 返回一个UserDetails的实现类的实例
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         System.out.println("查找用户：" + s);
-        User user = getByUsername(s);
+        User user = getUserByUsername(s);
         if (user == null) {
             throw new UsernameNotFoundException("没有该用户");
         }
