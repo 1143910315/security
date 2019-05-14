@@ -1,0 +1,34 @@
+server:
+  #服务器端口
+  port: 80
+  servlet:
+    #访问地址前缀
+    context-path:
+spring:
+  datasource:
+    #数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #数据库链接
+    url: jdbc:mysql://localhost:3306/security?useSSL=true&serverTimezone=UTC
+    #数据库用户名
+    username: root
+    #数据库密码
+    password: root
+    tomcat:
+      #连接池支持的最大连接数
+      max-active: 100
+      #连接池中最多可空闲连接数
+      max-idle: 100
+      #初始化连接数
+      initial-size: 20
+  jpa:
+    #显示jpa操作数据库语句
+    show-sql: true
+    #新建数据库使用InnoDB引擎
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      #如果启动时表格式不一致则更新表，原有数据保留
+      ddl-auto: update
+  thymeleaf:
+    #关闭thymeleaf缓存
+    cache: false
