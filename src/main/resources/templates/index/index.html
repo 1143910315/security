@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery-3.4.1.min.js}" src="../static/js/jquery-3.4.1.min.js"></script>
+    <style>
+        .verify{
+            border: 2px solid #333;
+            position: relative;
+        }
+        .bar{
+            background-color: #aaa;
+            height: 44px;
+            position: relative;
+        }
+        .bar_block{
+            width: 40px;
+            height: 40px;
+            top: 1px;
+            background-color: #fff;
+            border: 1px #888 solid;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            position: absolute;
+        }
+        .verify_form{
+            display: flex;
+        }
+        .img_content{
+            width: 400px;
+            height: 150px;
+        }
+        .img_verify{
+            width: 40px;
+            height: 40px;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div>这是第一个页面</div>
+    <div class="verify_form">
+        <div class="verify">
+            <div class="img_content"></div>
+            <div class="img_verify"></div>
+            <div class="bar">
+                <div class="bar_block"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var status = {
+                down: false,
+                originX: 0,
+                originY: 0
+            };
+            var down = function (x, y) {
+                status.down = true;
+                status.originX = x;
+                status.originY = y;
+                return false;
+            };
+            var move = function (x, y) {
+                if (status.down) {
+                    var e = $('.bar_block');
+                    var left = x - status.originX;
+                    left = Math.max(0, left);
+                    left = Math.min(400 - e.outerWidth(), left);
+                    e.css("left", left + "px");
+                    $(".img_verify").css("left", left + "px");
+                    return false;
+                }
+            };
+            var up = function (x, y) {
+                if (status.down) {
+                    var v=$(".img_verify").css("left");
+                    $('.bar_block').css("left","");
+                    $('.img_verify').css("left","");
+                    status.down = false;
+                    $.ajax({
+                        url:"/verify/login",
+                        success:function (e) {
+                            console.log(e.status+"px=======左边是服务器的值======="+v);
+                        }
+                    });
+                    return false;
+                }
+            };
+            $(document).on("mousedown", ".bar_block", function (e) {
+                return down(e.pageX, e.pageY);
+            }).on("mousemove", function (e) {
+                return move(e.pageX, e.pageY);
+            }).on("mouseup", function (e) {
+                return up(e.pageX, e.pageY);
+            });
+            // 请求后台图片
+            var verify_refresh=function () {
+                var image = new Image();
+                image.src="/image";
+                image.onload=function () {
+                    $(".img_content").empty().append(image);
+                    var img = new Image();
+                    img.src="/verifyimg";
+                    img.onload=function () {
+                        $(".img_verify").empty().append(img).css("top",getCookie("verify")+"px");
+                    };
+                };
+            };
+            verify_refresh();
+        });
+        //写cookies
+
+        function setCookie(name,value)
+        {
+            var Days = 30;
+            var exp = new Date();
+            exp.setTime(exp.getTime() + Days*24*60*60*1000);
+            document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+        }
+
+        //读取cookies
+        function getCookie(name)
+        {
+            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+
+            if(arr=document.cookie.match(reg))
+
+                return unescape(arr[2]);
+            else
+                return null;
+        }
+
+        //删除cookies
+        function delCookie(name)
+        {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            var cval=getCookie(name);
+            if(cval!=null)
+                document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+        }
+    </script>
+</body>
+</html>

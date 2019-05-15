@@ -1,3 +1,5 @@
+project:
+  version: test
 server:
   #服务器端口
   port: 80
@@ -32,3 +34,10 @@ spring:
   thymeleaf:
     #关闭thymeleaf缓存
     cache: false
+#以下配置用于YmlReaderTest的测试
+YmlReaderTest:
+  string: test
+  list:
+    - test
+    - data:
+        string: test

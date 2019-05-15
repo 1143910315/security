@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "project.version",
+      "type": "java.lang.String",
+      "description": "指定该值为test时,启用代码调试,例如返回服务器真实错误信息."
+    },
+    {
+      "name": "YmlReaderTest.string",
+      "type": "java.lang.String",
+      "description": "Description for YmlReaderTest.string."
+    },
+    {
+      "name": "YmlReaderTest.list",
+      "type": "java.util.List",
+      "description": "Description for YmlReaderTest.list."
+    }
+  ]
+}
