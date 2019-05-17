@@ -106,6 +106,13 @@
 
                             }, 2000);
                         }
+                        if (data.message) {
+                            try {
+                                showMessage(data.message);
+                            } catch (e) {
+                                console.error(e.message);
+                            }
+                        }
                         //status为0即为请求成功，才会调用用户处理程序
                         if (data.status === 0) {
                             try {
@@ -118,13 +125,6 @@
                             }
                         } else if (debugModel) {
                             console.error("因为设置了normal为true，且返回状态码不为0，放弃调用用户设置的success方法。");
-                        }
-                        if (data.message) {
-                            try {
-                                showMessage(data.message);
-                            } catch (e) {
-                                console.error(e.message);
-                            }
                         }
                     } catch (e) {
                         console.error("一般处理程序无法处理该次请求！\n错误信息为：" + e.message);

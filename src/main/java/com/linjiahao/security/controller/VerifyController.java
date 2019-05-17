@@ -6,6 +6,7 @@ import com.linjiahao.security.tools.Base64Tool;
 import com.linjiahao.security.tools.ImageDeal;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
@@ -20,7 +21,32 @@ import java.util.Random;
 
 @RestController
 public class VerifyController {
-
+    @PostMapping("/noAuthenticate/check_verify.json")
+    public JsonMessage checkVerify(HttpServletRequest request, @RequestParam("left") String leftStr) {
+        JsonMessage jsonMessage = new JsonMessage();
+        try {
+            int left = Integer.parseInt(leftStr);
+            HttpSession session = request.getSession();
+            int attribute;
+            try {
+                attribute = (int) session.getAttribute("verifyLeft");
+            } catch (Exception e) {
+                jsonMessage.setStatus(2);
+                jsonMessage.setMessage("验证码过期，请刷新验证码");
+                return jsonMessage;
+            }
+            if (Math.abs(left - attribute) < 10) {
+                jsonMessage.setStatus(0);
+                jsonMessage.setMessage("验证成功");
+            } else {
+                jsonMessage.setStatus(1);
+                jsonMessage.setMessage("验证失败");
+            }
+        } catch (Exception e) {
+            jsonMessage.setException(e);
+        }
+        return jsonMessage;
+    }
 
     /**
      * 以json的格式返回前端ajax请求，其中包括验证码背景图片，验证码滑块图片，滑块图片高度
@@ -75,6 +101,8 @@ public class VerifyController {
             data.put("verifySlider", base64Tool.encodeBase64());
             //无异常时，将数据返回
             session.setAttribute("verifyLeft", left);// 记录验证码图片左边
+            //设置过期时间
+            session.setMaxInactiveInterval(3 * 60);
             jsonMessage.setStatus(0);
             jsonMessage.setData(data);
         } catch (Exception e) {

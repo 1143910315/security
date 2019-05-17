@@ -6,16 +6,18 @@
     <script th:src="@{/noAuthenticate/js/jquery-3.4.1.min.js}" src="../../static/noAuthenticate/js/jquery-3.4.1.min.js"></script>
     <script th:src="@{/noAuthenticate/js/request-deal.js}" src="../../static/noAuthenticate/js/request-deal.js"></script>
     <style>
-        .verify{
+        .verify {
             border: 2px solid #333;
             position: relative;
         }
-        .bar{
+
+        .bar {
             background-color: #aaa;
             height: 44px;
             position: relative;
         }
-        .bar_block{
+
+        .bar_block {
             width: 40px;
             height: 40px;
             top: 1px;
@@ -26,128 +28,133 @@
             border-radius: 3px;
             position: absolute;
         }
-        .verify_form{
+
+        .verify_form {
             display: flex;
         }
-        .img_content{
+
+        .img_content {
             width: 400px;
             height: 150px;
         }
-        .img_verify{
+
+        .img_verify {
             width: 40px;
             height: 40px;
             position: absolute;
         }
+
+        .none {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div>这是第一个页面</div>
-    <div class="verify_form">
-        <div class="verify">
-            <div class="img_content"></div>
-            <div class="img_verify"></div>
-            <div class="bar">
-                <div class="bar_block"></div>
-            </div>
+<div>这是第一个页面</div>
+<div class="verify_form">
+    <div class="verify">
+        <div class="img_content"></div>
+        <div class="img_verify"></div>
+        <div class="bar">
+            <div class="bar_block"></div>
         </div>
     </div>
-    <form id="get_verify" th:action="@{/noAuthenticate/gen_verify.json}" method="POST">
-    </form>
-    <script>
-        $(function () {
-            var status = {
-                down: false,
-                originX: 0,
-                originY: 0
-            };
-            var down = function (x, y) {
-                status.down = true;
-                status.originX = x;
-                status.originY = y;
+</div>
+<form id="get_verify" class="none" th:action="@{/noAuthenticate/gen_verify.json}" method="POST"></form>
+<form id="cheak_verify" class="none" th:action="@{/noAuthenticate/check_verify.json}" method="POST">
+    <input type="number" name="left" id="cheak_verify_left">
+</form>
+<script>
+    $(function () {
+        var status = {
+            down: false,
+            originX: 0,
+            originY: 0
+        };
+        var down = function (x, y) {
+            status.down = true;
+            status.originX = x;
+            status.originY = y;
+            return false;
+        };
+        var move = function (x, y) {
+            if (status.down) {
+                var e = $('.bar_block');
+                var left = x - status.originX;
+                left = Math.max(0, left);
+                left = Math.min(400 - e.outerWidth(), left);
+                e.css("left", left + "px");
+                $(".img_verify").css("left", left + "px");
                 return false;
-            };
-            var move = function (x, y) {
-                if (status.down) {
-                    var e = $('.bar_block');
-                    var left = x - status.originX;
-                    left = Math.max(0, left);
-                    left = Math.min(400 - e.outerWidth(), left);
-                    e.css("left", left + "px");
-                    $(".img_verify").css("left", left + "px");
-                    return false;
-                }
-            };
-            var up = function (x, y) {
-                if (status.down) {
-                    var v=$(".img_verify").css("left");
-                    $('.bar_block').css("left","");
-                    $('.img_verify').css("left","");
-                    status.down = false;
-                    return;
-                    $.ajax({
-                        url:"/verify/login",
-                        success:function (e) {
-                            console.log(e.status+"px=======左边是服务器的值======="+v);
-                        }
-                    });
-                    return false;
-                }
-            };
-            $(document).on("mousedown", ".bar_block", function (e) {
-                return down(e.pageX, e.pageY);
-            }).on("mousemove", function (e) {
-                return move(e.pageX, e.pageY);
-            }).on("mouseup", function (e) {
-                return up(e.pageX, e.pageY);
-            });
-            // 请求后台图片
-            var verify_refresh=function () {
-                $("#get_verify").formSubmit(101,function (data) {
-                    var image = new Image();
-                    image.src="data:image/jpg;base64,"+data.verifyBackground;
-                    image.onload=function () {
-                        $(".img_content").empty().append(image);
-                    };
-                    var img = new Image();
-                    img.src="data:image/jpg;base64,"+data.verifySlider;
-                    img.onload=function () {
-                        $(".img_verify").empty().append(img).css("top",data.top+"px");
-                    };
+            }
+        };
+        var up = function (x, y) {
+            if (status.down) {
+                var v = $(".img_verify").css("left");
+                $('.bar_block').css("left", "");
+                $('.img_verify').css("left", "");
+                status.down = false;
+                $("#cheak_verify_left").val(parseInt(v));
+                $("#cheak_verify").formSubmit(102, {
+                    error: function () {
+                        verify_refresh();
+                    }
                 });
-            };
-            verify_refresh();
+                return false;
+            }
+        };
+        $(document).on("mousedown", ".bar_block", function (e) {
+            return down(e.pageX, e.pageY);
+        }).on("mousemove", function (e) {
+            return move(e.pageX, e.pageY);
+        }).on("mouseup", function (e) {
+            return up(e.pageX, e.pageY);
         });
-        //写cookies
+        // 请求后台图片
+        var verify_refresh = function () {
+            $("#get_verify").formSubmit(101, function (data) {
+                var image = new Image();
+                image.src = "data:image/jpg;base64," + data.verifyBackground;
+                image.onload = function () {
+                    $(".img_content").empty().append(image);
+                };
+                var img = new Image();
+                img.src = "data:image/jpg;base64," + data.verifySlider;
+                img.onload = function () {
+                    $(".img_verify").empty().append(img).css("top", data.top + "px");
+                };
+            });
+        };
+        verify_refresh();
+    });
 
-        function setCookie(name,value)
-        {
-            var Days = 30;
-            var exp = new Date();
-            exp.setTime(exp.getTime() + Days*24*60*60*1000);
-            document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+    //写cookies
+    function setCookie(name, value) {
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    }
+
+    //读取cookies
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)) {
+            return unescape(arr[2]);
+        } else {
+            return null;
         }
+    }
 
-        //读取cookies
-        function getCookie(name)
-        {
-            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-
-            if(arr=document.cookie.match(reg))
-
-                return unescape(arr[2]);
-            else
-                return null;
+    //删除cookies
+    function delCookie(name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = getCookie(name);
+        if (cval != null) {
+            document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
         }
-
-        //删除cookies
-        function delCookie(name)
-        {
-            var exp = new Date();
-            exp.setTime(exp.getTime() - 1);
-            var cval=getCookie(name);
-            if(cval!=null)
-                document.cookie= name + "="+cval+";expires="+exp.toGMTString();
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
