@@ -21,9 +21,7 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> collection) throws AccessDeniedException, InsufficientAuthenticationException {
         //迭代器遍历目标url的权限列表
-        Iterator<ConfigAttribute> iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            ConfigAttribute ca = iterator.next();
+        for (ConfigAttribute ca : collection) {
             String needRole = ca.getAttribute();
             if ("ROLE_LOGIN".equals(needRole)) {
                 if (authentication instanceof AnonymousAuthenticationToken) {

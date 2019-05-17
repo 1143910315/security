@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script th:src="@{/js/jquery-3.4.1.min.js}" src="../static/js/jquery-3.4.1.min.js"></script>
+    <script th:src="@{/noAuthenticate/js/jquery-3.4.1.min.js}" src="../../static/noAuthenticate/js/jquery-3.4.1.min.js"></script>
+    <script th:src="@{/noAuthenticate/js/request-deal.js}" src="../../static/noAuthenticate/js/request-deal.js"></script>
     <style>
         .verify{
             border: 2px solid #333;
@@ -50,6 +51,8 @@
             </div>
         </div>
     </div>
+    <form id="get_verify" th:action="@{/noAuthenticate/gen_verify.json}" method="POST">
+    </form>
     <script>
         $(function () {
             var status = {
@@ -80,6 +83,7 @@
                     $('.bar_block').css("left","");
                     $('.img_verify').css("left","");
                     status.down = false;
+                    return;
                     $.ajax({
                         url:"/verify/login",
                         success:function (e) {
@@ -98,16 +102,18 @@
             });
             // 请求后台图片
             var verify_refresh=function () {
-                var image = new Image();
-                image.src="/image";
-                image.onload=function () {
-                    $(".img_content").empty().append(image);
-                    var img = new Image();
-                    img.src="/verifyimg";
-                    img.onload=function () {
-                        $(".img_verify").empty().append(img).css("top",getCookie("verify")+"px");
+                $("#get_verify").formSubmit(101,function (data) {
+                    var image = new Image();
+                    image.src="data:image/jpg;base64,"+data.verifyBackground;
+                    image.onload=function () {
+                        $(".img_content").empty().append(image);
                     };
-                };
+                    var img = new Image();
+                    img.src="data:image/jpg;base64,"+data.verifySlider;
+                    img.onload=function () {
+                        $(".img_verify").empty().append(img).css("top",data.top+"px");
+                    };
+                });
             };
             verify_refresh();
         });

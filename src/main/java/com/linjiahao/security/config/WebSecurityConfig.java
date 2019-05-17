@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //在这里配置哪些页面不需要认证
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/", "/noAuthenticate");
+        web.ignoring().antMatchers("/", "/noAuthenticate/**","/favicon.ico");
     }
 
     /**
@@ -117,7 +117,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
                         httpServletResponse.setContentType("application/json;charset=utf-8");
                         PrintWriter out = httpServletResponse.getWriter();
-//                        ObjectMapper objectMapper = new ObjectMapper();
                         JsonMessage jsonMessage=new JsonMessage();
                         jsonMessage.setStatus(0);
                         jsonMessage.setMessage("登录成功");

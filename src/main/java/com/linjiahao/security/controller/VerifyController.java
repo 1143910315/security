@@ -30,7 +30,7 @@ public class VerifyController {
      * @param request
      * @return
      */
-    @PostMapping("/gen_verify.json")
+    @PostMapping("/noAuthenticate/gen_verify.json")
     public JsonMessage generateVerifyImage(HttpServletRequest request) {
         HttpSession session = request.getSession();
         // 返回前端数据

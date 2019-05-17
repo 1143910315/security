@@ -34,6 +34,9 @@ spring:
   thymeleaf:
     #关闭thymeleaf缓存
     cache: false
+  mvc:
+    favicon:
+      enabled: false
 #以下配置用于YmlReaderTest的测试
 YmlReaderTest:
   string: test
