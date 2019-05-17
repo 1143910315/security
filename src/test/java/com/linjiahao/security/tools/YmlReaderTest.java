@@ -12,6 +12,7 @@ public class YmlReaderTest {
         assertEquals("test", YmlReader.load("YmlReaderTest.list[0]"));
         assertEquals("test", YmlReader.load("YmlReaderTest.list[1].data.string"));
     }
+
     @Test
     public void load_old() {
         assertEquals("test", YmlReader.load_old("YmlReaderTest.string"));

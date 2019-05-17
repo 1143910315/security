@@ -3,7 +3,6 @@ package com.linjiahao.security.data;
 import com.alibaba.fastjson.JSONObject;
 import com.linjiahao.security.tools.YmlReader;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Data
@@ -17,12 +16,13 @@ public class JsonMessage {
     private String message;
     //指定本次请求实际的json数据
     private JSONObject data;
-    public void setException(Exception e){
-        String version= (String) YmlReader.load("project.version");
+
+    public void setException(Exception e) {
+        String version = (String) YmlReader.load("project.version");
         setStatus(-1);
-        if(version.equals("test")){
+        if (version.equals("test")) {
             setMessage("服务错误");
-        }else {
+        } else {
             setMessage(e.getMessage());
         }
         e.printStackTrace();
