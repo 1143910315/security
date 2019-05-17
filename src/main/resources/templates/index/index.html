@@ -96,7 +96,7 @@
                 status.down = false;
                 $("#cheak_verify_left").val(parseInt(v));
                 $("#cheak_verify").formSubmit(102, {
-                    error: function () {
+                    complete: function () {
                         verify_refresh();
                     }
                 });

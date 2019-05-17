@@ -53,22 +53,22 @@
                         normalDealWith = arguments[i];
                     }
                 } else if (typeof arguments[i] === "object") {
-                    if (!arguments[i].success && typeof arguments[i].success === "function") {
+                    if (typeof arguments[i].success === "function") {
                         successFunction = arguments[i].success;
                     }
-                    if (!arguments[i].error && typeof arguments[i].error === "function") {
+                    if (typeof arguments[i].error === "function") {
                         errorFunction = arguments[i].error;
                     }
-                    if (!arguments[i].complete && typeof arguments[i].complete === "function") {
+                    if (typeof arguments[i].complete === "function") {
                         completeFunction = arguments[i].complete;
                     }
-                    if (!arguments[i].type && typeof arguments[i].type === "string") {
+                    if (typeof arguments[i].type === "string") {
                         submitType = arguments[i].type;
                     }
-                    if (!arguments[i].normal && typeof arguments[i].normal === "boolean") {
+                    if (typeof arguments[i].normal === "boolean") {
                         normalDealWith = arguments[i].normal;
                     }
-                    if (!arguments[i].lock && typeof arguments[i].success === "number") {
+                    if (typeof arguments[i].success === "number") {
                         lockNumber = arguments[i].lock;
                     }
                 }
@@ -100,10 +100,10 @@
             if (normalDealWith) {
                 successFunction = function (data) {
                     try {
+                        this.responseData = data;
                         if (data.url) {
                             setTimeout(function () {
                                 location.href = data.url;
-
                             }, 2000);
                         }
                         if (data.message) {
@@ -117,14 +117,14 @@
                         if (data.status === 0) {
                             try {
                                 // 封装请求成功/失败事件，防止成功/失败事件报错导致无法正常触发完成事件
-                                var arg = arguments;
+                                var arg = [].concat(arguments);
                                 arg[0] = data.data;
                                 successFunctionOriginal && successFunctionOriginal.apply(this, arg);
                             } catch (e) {
                                 console.error(e.message);
                             }
                         } else if (debugModel) {
-                            console.error("因为设置了normal为true，且返回状态码不为0，放弃调用用户设置的success方法。");
+                            console.log("因为设置了normal为true，且返回状态码不为0，放弃调用用户设置的success方法。如果需要处理状态码不为0的成功请求，请通过设置complete方法，并在complete方法里用this.responseData获取原始数据。");
                         }
                     } catch (e) {
                         console.error("一般处理程序无法处理该次请求！\n错误信息为：" + e.message);
