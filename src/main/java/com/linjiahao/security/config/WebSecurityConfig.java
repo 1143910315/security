@@ -126,7 +126,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         JsonMessage jsonMessage = new JsonMessage();
                         jsonMessage.setStatus(0);
                         jsonMessage.setMessage("登录成功");
-                        jsonMessage.setUrl(request.getRedirectUrl());// 重定向到登录前页面
+                        if (request != null) {
+                            jsonMessage.setUrl(request.getRedirectUrl());// 重定向到被拦截跳转页面
+                        }else{
+                            jsonMessage.setUrl("/");// 重定向到首页
+                        }
                         out.write(jsonMessage.toString());
                         out.flush();
                         out.close();
