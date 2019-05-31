@@ -1,9 +1,6 @@
 package com.linjiahao.security.tools;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriter;
+import javax.imageio.*;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -13,19 +10,19 @@ import java.io.OutputStream;
 public class ImageDeal {
     /**
      * @param bufferedImage 指定图片
-     * @param outputStream 将图片写到此outputStream
-     * @param quality 图片质量，取值0~1
-     * @throws IOException
+     * @param outputStream  将图片写到此outputStream
+     * @param quality       图片质量，取值0~1
+     * @throws IOException 如果OutputStream转化失败，则抛出异常
      */
     public static void compress(BufferedImage bufferedImage, OutputStream outputStream, float quality) throws IOException {
         // 指定写图片的方式为 jpg
         ImageWriter imageWriter = ImageIO.getImageWritersByFormatName("jpg").next();
         JPEGImageWriteParam imageWriteParam = new JPEGImageWriteParam(null);
         // 要使用压缩，必须指定压缩方式为MODE_EXPLICIT
-        imageWriteParam.setCompressionMode(imageWriteParam.MODE_EXPLICIT);
+        imageWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         // 这里指定压缩的程度，参数qality是取值0~1范围内
         imageWriteParam.setCompressionQuality(quality);
-        imageWriteParam.setProgressiveMode(imageWriteParam.MODE_DISABLED);
+        imageWriteParam.setProgressiveMode(ImageWriteParam.MODE_DISABLED);
         ColorModel colorModel = bufferedImage.getColorModel();
         // 指定压缩时使用的色彩模式
         imageWriteParam.setDestinationType(new ImageTypeSpecifier(colorModel, colorModel.createCompatibleSampleModel(16, 16)));

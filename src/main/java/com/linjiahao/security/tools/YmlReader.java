@@ -10,7 +10,7 @@ import java.util.Map;
 public class YmlReader {
     /**
      * @param key 从application.yml读取指定键值（支持形如server.port[0]的对象访问），在字符前加斜杠（\）可以转义为文本，但不保证正常工作
-     * @return
+     * @return 返回从yml读出的对象
      */
     public static Object load(String key) {
         Object o = null;

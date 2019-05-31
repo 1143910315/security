@@ -15,10 +15,14 @@ import java.util.List;
 @Service
 //框架需要使用到一个实现了UserDetailsService接口的类
 public class UserService implements UserDetailsService {
+    private final UserRepository userRepository;
+    private final RoleService roleService;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleService roleService;
+    public UserService(UserRepository userRepository, RoleService roleService) {
+        this.userRepository = userRepository;
+        this.roleService = roleService;
+    }
 
     @Transactional
     public List<User> getAllUser() {

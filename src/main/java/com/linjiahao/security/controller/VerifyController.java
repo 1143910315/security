@@ -53,8 +53,8 @@ public class VerifyController {
      * 图片返回格式为dataURL
      * 目前，验证码背景图片宽高为400×150；滑块图片宽高为40×40
      *
-     * @param request
-     * @return
+     * @param request 请求的request
+     * @return 消息
      */
     @PostMapping("/noAuthenticate/gen_verify.json")
     public JsonMessage generateVerifyImage(HttpServletRequest request) {
@@ -113,7 +113,7 @@ public class VerifyController {
 
     /**
      * @return 此方法获取resource/verify目录下以v_开头的图片，这些图片将被用作验证码背景图片
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException 一般不抛出异常，除非项目没有相关目录或文件
      */
     private File getRandomImage() throws FileNotFoundException {
         //定义resource/verify目录下以v_开头的图片都是验证码背景图片

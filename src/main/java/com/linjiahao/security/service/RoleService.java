@@ -9,8 +9,12 @@ import java.util.List;
 
 @Service
 public class RoleService {
+    private final RoleRepository roleRepository;
+
     @Autowired
-    private RoleRepository roleRepository;
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     public Role getRoleByRolename(String rolename) {
         return roleRepository.findFirstByRolename(rolename);

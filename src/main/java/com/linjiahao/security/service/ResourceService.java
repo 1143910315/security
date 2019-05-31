@@ -7,8 +7,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ResourceService {
+    private final ResourceRepository resourceRepository;
+
     @Autowired
-    private ResourceRepository resourceRepository;
+    public ResourceService(ResourceRepository resourceRepository) {
+        this.resourceRepository = resourceRepository;
+    }
 
     public Resource getResourceByUrl(String url) {
         return resourceRepository.findFirstByUrl(url);

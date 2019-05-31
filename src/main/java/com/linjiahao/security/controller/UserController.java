@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
+    private final UserService userService;
+
     @Autowired
-    UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/noAuthenticate/register.json")
     public JsonMessage register(@RequestParam("username") String username, @RequestParam("password") String password) {

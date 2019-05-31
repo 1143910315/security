@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 @Component
 //Security需要用到一个实现了AccessDecisionManager接口的类
@@ -26,8 +25,9 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
             if ("ROLE_LOGIN".equals(needRole)) {
                 if (authentication instanceof AnonymousAuthenticationToken) {
                     throw new BadCredentialsException("未登录");
-                } else
+                } else {
                     return;
+                }
             }
             //遍历当前用户所具有的权限
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

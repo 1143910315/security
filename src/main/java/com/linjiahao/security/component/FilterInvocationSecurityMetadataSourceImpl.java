@@ -17,10 +17,14 @@ import java.util.List;
 @Component
 //接收用户请求的地址，返回访问该地址需要的所有权限
 public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocationSecurityMetadataSource {
+    private final ResourceService resourceService;
+    private final RoleService roleService;
+
     @Autowired
-    private ResourceService resourceService;
-    @Autowired
-    private RoleService roleService;
+    public FilterInvocationSecurityMetadataSourceImpl(ResourceService resourceService, RoleService roleService) {
+        this.resourceService = resourceService;
+        this.roleService = roleService;
+    }
 
     @Override
     //接收用户请求的地址，返回访问该地址需要的所有权限

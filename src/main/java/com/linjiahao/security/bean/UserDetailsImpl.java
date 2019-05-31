@@ -1,8 +1,7 @@
 package com.linjiahao.security.bean;
 
-import com.linjiahao.security.service.RoleService;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,33 +17,15 @@ public class UserDetailsImpl implements UserDetails {
     @Getter
     private String password;
     //包含着用户对应的所有Role，在使用时调用者给对象注入roles
+    @Getter
+    @Setter
     private List<Role> roles;
-    @Autowired
-    private RoleService roleService;
-
-    //无参构造
-    public UserDetailsImpl() {
-    }
-
-    //用User构造
-    public UserDetailsImpl(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-    }
 
     //用User和List<Role>构造
     public UserDetailsImpl(User user, List<Role> roles) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.roles = roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
     }
 
     @Override
