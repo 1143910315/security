@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/noAuthenticate/js/jquery-3.4.1.min.js}" src="../../static/noAuthenticate/js/jquery-3.4.1.min.js"></script>
+    <script th:src="@{/noAuthenticate/js/request-deal.js}" src="../../static/noAuthenticate/js/request-deal.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+<div>这是登录页面</div>
+<form id="login" th:action="@{/login.json}" method="POST">
+    <label for="username">用户名：<input id="username" type="text" name="username"></label>
+    <label for="username">密码：<input id="password" type="password" name="password"></label>
+    <button>登录</button>
+</form>
+<script>
+    $(function () {
+        $("#login").submit(function () {
+            $(this).formSubmit(101);
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

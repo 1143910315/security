@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
 @Service
 //框架需要使用到一个实现了UserDetailsService接口的类
 public class UserService implements UserDetailsService {
@@ -27,6 +28,14 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User getUserByUsername(String username) {
         return userRepository.findFirstByUsername(username);
+    }
+
+    @Transactional
+    public void addUser(String username, String password) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        userRepository.saveAndFlush(user);
     }
 
     @Override

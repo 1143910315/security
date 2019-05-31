@@ -22,6 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //在这里配置哪些页面不需要认证
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/", "/noAuthenticate/**","/favicon.ico");
+        web.ignoring().antMatchers("/", "/login.html", "/register.html", "/noAuthenticate/**", "/favicon.ico");
     }
 
     /**
@@ -89,16 +92,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/hello").hasAuthority("ADMIN")
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
+                .loginPage("/login.html")  // 未登录跳转页面
+                .loginProcessingUrl("/login.json")  // 自定义的登录接口
+                .usernameParameter("username")  // 登录请求参数的用户名参数名
+                .passwordParameter("password")  // 登录请求参数的密码参数名
                 .permitAll()
                 .failureHandler(new AuthenticationFailureHandler() {
                     @Override
                     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
                         httpServletResponse.setContentType("application/json;charset=utf-8");
                         PrintWriter out = httpServletResponse.getWriter();
-                        JsonMessage jsonMessage=new JsonMessage();
+                        JsonMessage jsonMessage = new JsonMessage();
                         jsonMessage.setStatus(-1);
                         if (e instanceof UsernameNotFoundException || e instanceof BadCredentialsException) {
                             jsonMessage.setMessage("用户名或密码输入错误，登录失败!");
@@ -115,11 +119,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(new AuthenticationSuccessHandler() {
                     @Override
                     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                        RequestCache requestCache = new HttpSessionRequestCache();
+                        SavedRequest request = requestCache.getRequest(httpServletRequest, httpServletResponse);
                         httpServletResponse.setContentType("application/json;charset=utf-8");
                         PrintWriter out = httpServletResponse.getWriter();
-                        JsonMessage jsonMessage=new JsonMessage();
+                        JsonMessage jsonMessage = new JsonMessage();
                         jsonMessage.setStatus(0);
                         jsonMessage.setMessage("登录成功");
+                        jsonMessage.setUrl(request.getRedirectUrl());// 重定向到登录前页面
                         out.write(jsonMessage.toString());
                         out.flush();
                         out.close();

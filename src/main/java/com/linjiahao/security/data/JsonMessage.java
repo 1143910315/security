@@ -27,4 +27,8 @@ public class JsonMessage {
         }
         e.printStackTrace();
     }
+
+    public String toString() {
+        return JSONObject.toJSONString(this);
+    }
 }
