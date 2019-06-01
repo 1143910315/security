@@ -6,6 +6,9 @@
     <script th:src="@{/noAuthenticate/js/jquery-3.4.1.min.js}" src="../../static/noAuthenticate/js/jquery-3.4.1.min.js"></script>
     <script th:src="@{/noAuthenticate/js/request-deal.js}" src="../../static/noAuthenticate/js/request-deal.js"></script>
     <style>
+        .none{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -13,6 +16,7 @@
 <form id="login" th:action="@{/login.json}" method="POST">
     <label for="username">用户名：<input id="username" type="text" name="username"></label>
     <label for="username">密码：<input id="password" type="password" name="password"></label>
+    <input type="checkbox" name="remember-me" checked class="none">
     <button>登录</button>
 </form>
 <script>

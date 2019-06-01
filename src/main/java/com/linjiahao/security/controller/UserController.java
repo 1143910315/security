@@ -1,7 +1,9 @@
 package com.linjiahao.security.controller;
 
+import com.linjiahao.security.bean.Role;
 import com.linjiahao.security.bean.User;
 import com.linjiahao.security.data.JsonMessage;
+import com.linjiahao.security.service.RoleService;
 import com.linjiahao.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @PostMapping("/noAuthenticate/register.json")
@@ -46,7 +50,8 @@ public class UserController {
         try {
             User user = userService.getUserByUsername(username);
             if (user == null) {
-                userService.addUser(username, password);
+                Role role = roleService.getRoleByRolename("Role_user");
+                userService.addUser(username, password, role);
                 jsonMessage.setStatus(0);
                 jsonMessage.setUrl("/login.html");
                 jsonMessage.setMessage("注册成功");
@@ -59,4 +64,14 @@ public class UserController {
         }
         return jsonMessage;
     }
+
+//    @RequestMapping("/noAuthenticate/logout.json")
+//    public JsonMessage logout(HttpServletRequest request) {
+//        JsonMessage jsonMessage = new JsonMessage();
+//        jsonMessage.setUrl("/");
+//        jsonMessage.setMessage("您已退出登录");
+//        jsonMessage.setStatus(0);
+//        System.out.println(request.getMethod());
+//        return jsonMessage;
+//    }
 }

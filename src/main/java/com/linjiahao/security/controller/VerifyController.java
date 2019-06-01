@@ -101,8 +101,6 @@ public class VerifyController {
             data.put("verifySlider", base64Tool.encodeBase64());
             //无异常时，将数据返回
             session.setAttribute("verifyLeft", left);// 记录验证码图片左边
-            //设置过期时间
-            session.setMaxInactiveInterval(3 * 60);
             jsonMessage.setStatus(0);
             jsonMessage.setData(data);
         } catch (Exception e) {

@@ -130,9 +130,13 @@
                         console.error("一般处理程序无法处理该次请求！\n错误信息为：" + e.message);
                     }
                 };
-                errorFunction = function () {
+                errorFunction = function (xhr) {
                     try {
-                        showMessage("网络错误，请稍后重试！");
+                        if (xhr.responseJSON.message && xhr.responseJSON.message.length > 0) {
+                            showMessage(xhr.responseJSON.message);
+                        } else {
+                            showMessage("网络错误，请稍后重试！");
+                        }
                     } catch (e) {
                         console.error("一般处理程序无法处理该次请求！\n错误信息为：" + e.message);
                     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -60,6 +60,13 @@
         </div>
     </div>
 </div>
+<div th:inline="text"></div>
+<div th:fragment="logout" sec:authorize="isAnonymous()">
+    未登录
+</div>
+<form th:fragment="logout" th:action="@{/logout}" method="POST">
+    <button>退出登录</button>
+</form>
 <form id="get_verify" class="none" th:action="@{/noAuthenticate/gen_verify.json}" method="POST"></form>
 <form id="cheak_verify" class="none" th:action="@{/noAuthenticate/check_verify.json}" method="POST">
     <input type="number" name="left" id="cheak_verify_left">

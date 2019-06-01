@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @SpringBootApplication
 public class SecurityApplication {
@@ -26,5 +27,17 @@ public class SecurityApplication {
         registration.addUrlPatterns("/*");
         registration.setName("csrfFilter");
         return registration;
+    }
+
+    /**
+     * 重定义httpFirewall
+     *
+     * @return
+     */
+    @Bean
+    public StrictHttpFirewall httpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowSemicolon(true);
+        return firewall;
     }
 }

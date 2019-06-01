@@ -3,6 +3,7 @@ package com.linjiahao.security.config;
 import com.linjiahao.security.component.*;
 import com.linjiahao.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AccessDecisionManagerImpl myAccessDecisionManager;
     //403页面
     private final AccessDeniedHandlerImpl myAccessDeniedHandler;
+    @Resource
+    private DataSource dataSource;
 
     @Autowired
     public WebSecurityConfig(UserService userService, FilterInvocationSecurityMetadataSourceImpl myFilterInvocationSecurityMetadataSource, AccessDecisionManagerImpl myAccessDecisionManager, AccessDeniedHandlerImpl myAccessDeniedHandler) {
@@ -30,6 +38,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.myFilterInvocationSecurityMetadataSource = myFilterInvocationSecurityMetadataSource;
         this.myAccessDecisionManager = myAccessDecisionManager;
         this.myAccessDeniedHandler = myAccessDeniedHandler;
+    }
+
+    //如果采用持久化 token 的方法则需要指定保存token的方法
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+        db.setDataSource(dataSource);
+        return db;
     }
 
     /**
@@ -73,10 +89,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(new AuthenticationSuccessHandlerImpl())
                 .and()
                 .logout()
+                .logoutSuccessUrl("/")
                 .permitAll()
                 .and()
-                .csrf()
-                .disable()
+                .rememberMe().tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(1209600)
+                .and()
                 .exceptionHandling()
                 .accessDeniedHandler(myAccessDeniedHandler);
     }

@@ -1,5 +1,6 @@
 package com.linjiahao.security.service;
 
+import com.linjiahao.security.bean.Role;
 import com.linjiahao.security.bean.User;
 import com.linjiahao.security.bean.UserDetailsImpl;
 import com.linjiahao.security.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -35,10 +37,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void addUser(String username, String password) {
+    public void addUser(String username, String password, Role role) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+        user.setRoles(Collections.singletonList(role));
         userRepository.saveAndFlush(user);
     }
 

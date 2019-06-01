@@ -16,7 +16,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();
         JsonMessage jsonMessage = new JsonMessage();
         jsonMessage.setMessage("权限不足，请联系管理员!");
